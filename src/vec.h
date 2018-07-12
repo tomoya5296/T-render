@@ -103,10 +103,23 @@ inline std::ostream & operator<<(std::ostream &os, const Vec &v) {
 	return os;
 }
 
+inline double Dot(const Vec &v1, const Vec &v2) {
+	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+}
+
 inline Vec Cross(const Vec &v1, const Vec &v2) {
 	return Vec((v1.y * v2.z) - (v1.z * v2.y),
 			   (v1.z * v2.x) - (v1.x * v2.z),
 			   (v1.x * v2.y) - (v1.y * v2.x));
+}
+
+inline double det(const Vec &vecA, const Vec &vecB, const Vec &vecC) {
+	return ((vecA.x * vecB.y * vecC.z)
+		+ (vecA.y * vecB.z * vecC.x)
+		+ (vecA.z * vecB.x * vecC.y)
+		- (vecA.x * vecB.z * vecC.y)
+		- (vecA.y * vecB.x * vecC.z)
+		- (vecA.z * vecB.y * vecC.x));
 }
 
 #endif // ! _VEC_H_

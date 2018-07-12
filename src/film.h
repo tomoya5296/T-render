@@ -19,10 +19,10 @@ private:
 	const int width;
 	const int height;
 	const std::string outputfilename;
-	const Camera camera;
-	Vec cx, cy;
 
 public:
+	const Camera camera;
+	Vec cx, cy;
 	std::unique_ptr<Color[]> pixels;
 };
 
