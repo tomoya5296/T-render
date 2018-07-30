@@ -2,7 +2,6 @@
 #ifndef  _VEC_H_
 #define _VEC_H_
 
-
 #include <iostream>
 #include<sstream>
 #include<cmath>

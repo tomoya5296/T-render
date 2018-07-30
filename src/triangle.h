@@ -4,7 +4,6 @@
 #include <memory>
 #include "vec.h"
 #include "geometry.h"
-#include "intersect.h"
 #include "ray.h"
 
 struct TriangleMesh {
@@ -23,8 +22,6 @@ public:
 };
 
 class Triangle {
-public:
-	bool intersect(const Ray &ray, Hitpoint *hitpoint);
 
 public:
 	Triangle(const std::vector<Vec> &ps, const std::vector<Vec> &ns);

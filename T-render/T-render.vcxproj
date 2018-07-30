@@ -115,12 +115,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\bvh.cpp" />
     <ClCompile Include="..\src\film.cpp" />
+    <ClCompile Include="..\src\intersect.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\parallel.cpp" />
     <ClCompile Include="..\src\triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\bvh.h" />
     <ClInclude Include="..\src\camera.h" />
     <ClInclude Include="..\src\common.h" />
     <ClInclude Include="..\src\dir.h" />

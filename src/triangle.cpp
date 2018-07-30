@@ -9,47 +9,6 @@ TriangleMesh::TriangleMesh(const std::vector<Vec> &ps, const std::vector<Vec> &n
 	}
 }
 
-bool Triangle::intersect(const Ray &ray, Hitpoint *hitpoint) {
-	//Tomas Moller method
-	Vec edge2 = mesh.p[1] - mesh.p[0];
-	Vec	edge1 = mesh.p[2] - mesh.p[0];
-	Vec invRay = -1 * ray.dir;
-	double denominator = det(edge1, edge2, invRay);
-
-	if (denominator < 0.0) {
-		Vec temp = edge1;
-		edge1 = edge2;
-		edge2 = temp;
-	}
-	else if (denominator == 0.0) {
-		return false;
-	}
-	denominator = det(edge1, edge2, invRay);
-	if (denominator <= 0.0) {
-		return false;
-	}
-
-	Vec d = ray.org - mesh.p[0];
-	double u = det(d, edge2, invRay) / denominator;
-
-	if ((u >= 0.0) && (u <= 1.0)) {
-		double v = det(edge1, d, invRay) / denominator;
-		if ((v >= 0.0) && (u + v <= 1.0)) {
-			double t1 = det(edge1, edge2, d) / denominator;
-			if (t1 < 0.0) {
-				return false;
-			}
-			hitpoint->distance = t1;
-			hitpoint->position = ray.org + hitpoint->distance*ray.dir;
-			hitpoint->normal = normal;
-			return true;
-		}
-	}
-	return false;
-
-}
-
-
 Triangle::Triangle(const std::vector<Vec> &p, const std::vector<Vec> &n)
 	: mesh(p, n)
 {
