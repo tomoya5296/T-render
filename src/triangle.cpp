@@ -9,8 +9,8 @@ TriangleMesh::TriangleMesh(const std::vector<Vec> &ps, const std::vector<Vec> &n
 	}
 }
 
-Triangle::Triangle(const std::vector<Vec> &ps, const std::vector<Vec> &ns)
-	: mesh(ps, ns)
+Triangle::Triangle(const std::vector<Vec> &ps, const std::vector<Vec> &ns,
+				   const Material &mat_) : mesh(ps, ns), mat(mat_)
 {
 	normal = Normalize(Cross((ps[1] - ps[0]), (ps[2] - ps[0])));
 	bbox[0][0] = std::min(std::min(ps[0].x, ps[1].x), ps[2].x);

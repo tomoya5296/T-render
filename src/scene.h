@@ -66,7 +66,7 @@ void objectload(std::vector<std::shared_ptr<Triangle>> *tris,
 					vertex[ve] = Vec(vx, vy, vz);
 					normal[ve] = Vec(nx, ny, nz);
 				}
-				tris->push_back(std::make_shared<Triangle>(vertex, normal));
+				tris->push_back(std::make_shared<Triangle>(vertex, normal, objList[i].mat));
 				index_offset += fv;
 				// per-face material
 				shapes[s].mesh.material_ids[f];

@@ -5,6 +5,7 @@
 #include "vec.h"
 #include "geometry.h"
 #include "ray.h"
+#include "material.h"
 
 struct TriangleMesh {
 public:
@@ -24,10 +25,11 @@ public:
 class Triangle {
 
 public:
-	Triangle(const std::vector<Vec> &ps, const std::vector<Vec> &ns);
+	Triangle(const std::vector<Vec> &ps, const std::vector<Vec> &ns,
+			 const Material &mat_);
 	//Triangle Data
 	TriangleMesh mesh;
 	Vec normal;
 	float bbox[2][3];
-	//Material mat;
+	Material mat;
 };
