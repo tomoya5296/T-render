@@ -9,7 +9,6 @@
 
 
 // ray方向からの放射輝度を求める
-// ボリュームレンダリング方程式に基づく
 //Color radiance(BVH_node *nodes, Ray &ray, Random &rng, int maxDepth) {
 //
 //	int depth;

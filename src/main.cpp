@@ -30,10 +30,15 @@ void main(int argc, char **argv) {
 	//out put image
 	Film film(width, height, "../output/image.ppm");
 
-	//bvh datas
+	std::vector<Object> objList;
+	objList.push_back(Object(std::string(SCENE_DIRECTORY) + "bunny.obj",
+					  Color(0.0), Color(1.0), DIFFUSE));
+	objList.push_back(Object(std::string(SCENE_DIRECTORY) + "sphere.obj",
+					  Color(10.0), Color(0.0), DIFFUSE));
 
 	std::vector<std::shared_ptr<Triangle>> tris;
 	objectload(&tris, objList);
+	//bvh datas
 	BVH_node nodes[10000];  // ノードリスト．本当は適切なノード数を確保すべき
 	int used_node_count = 0;  // 現在使用されているノードの数
 	constructBVH(tris, nodes, used_node_count);

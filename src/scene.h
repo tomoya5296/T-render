@@ -6,24 +6,26 @@
 #include "sphere.h"
 #include "triangle.h"
 #include "parallel.h"
+#include "material.h"
 #include"tiny_obj_loader.h"
 
 
-const Sphere spheres[] = {
-	Sphere(16.5,Vec(73,30.5,78), Color(0.75, 0.75, 0.75))// ‰œ
-};
-
-std::vector<std::string> objList =
+struct Object
 {
-	std::string(SCENE_DIRECTORY) + "bunny.obj"
+	Object(std::string filename_, Color Le_, Color ref_, RefType type_)
+	: filename(filename_), mat(Le_, ref_, type_){}
+
+public:
+	std::string filename;
+	Material mat;
 };
 
 void objectload(std::vector<std::shared_ptr<Triangle>> *tris,
-	const std::vector<std::string> &strList) {
+	const std::vector<Object> &objList) {
 	tris->resize(0);
 
-	parallel_for(0, strList.size(), [&](int i){
-		std::string inputfile = strList[i];
+	parallel_for(0, objList.size(), [&](int i){
+		std::string inputfile = objList[i].filename;
 		tinyobj::attrib_t attrib;
 		std::vector<tinyobj::shape_t> shapes;
 		std::vector<tinyobj::material_t> materials;
