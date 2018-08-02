@@ -11,7 +11,7 @@
 
 
 void main(int argc, char **argv) {
-	int width = 640, height = 640, spp = 1, maxdepth = 10;
+	int width = 640, height = 640, spp = 10, maxdepth = 10;
 	//for (int i = 1; i < argc; i++) {
 	//	if (strcmp(argv[i], "--width") == 0) {
 	//		width = std::atoi(argv[++i]);
@@ -34,7 +34,7 @@ void main(int argc, char **argv) {
 
 	std::vector<std::shared_ptr<Triangle>> tris;
 	objectload(&tris, objList);
-	static BVH_node nodes[10000];  // ノードリスト．本当は適切なノード数を確保すべき
+	BVH_node nodes[10000];  // ノードリスト．本当は適切なノード数を確保すべき
 	int used_node_count = 0;  // 現在使用されているノードの数
 	constructBVH(tris, nodes, used_node_count);
 
@@ -56,9 +56,11 @@ void main(int argc, char **argv) {
 			//const Color L = radiance(ray, Medium(), rng, 0, maxDepth);
 			//Assertion(L.isValid(), "Radiance is invalid: (%f, %f %f)", L.x, L.y, L.z);
 			std::shared_ptr<Triangle> hittri = nullptr;
-			Intersection *tempintersect = nullptr;
-			hittri = intersect(nodes, 0, ray, tempintersect);
-			film.pixels[i] = Vec(1.0 / tempintersect->hitpoint.distance, 0.0, 0.0);
+			Intersection tempintersect;
+			hittri = intersect(nodes, 0, ray, &tempintersect);
+			if (hittri == nullptr) {
+				film.pixels[i] = Vec(1.0 , 0.0, 0.0);
+			}
 		}
 	});
 

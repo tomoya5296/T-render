@@ -40,13 +40,12 @@ void makeLeaf(std::vector<std::shared_ptr <Triangle>> &polygons, BVH_node *node)
 // 与えられたポリゴンリストについて、SAH に基づいて領域分割
 // nodeIndex は対象ノードのインデックス
 void constructBVH_internal(std::vector<std::shared_ptr<Triangle>> &polygons, 
-	BVH_node *nodes, int used_node_count, int nodeIndex) {
+	BVH_node *nodes, int &used_node_count, const int nodeIndex) {
 	BVH_node *node = &nodes[nodeIndex];
 
 	creatAABBfromTriangles(polygons, node->bbox);  // 全体を囲うAABBを計算
 
-
-												   // 領域分割をせず、polygons を含む葉ノードを構築する場合を暫定の bestCost にする
+	// 領域分割をせず、polygons を含む葉ノードを構築する場合を暫定の bestCost にする
 	float bestCost = T_tri * polygons.size();
 
 	int bestAxis = -1;  // 分割に最も良い軸 (0:x, 1:y, 2:z)
@@ -133,9 +132,10 @@ void constructBVH_internal(std::vector<std::shared_ptr<Triangle>> &polygons,
 
 // フロントエンド関数．これを呼べば nodes[0] をルートとした BVH が構築される
 void constructBVH(std::vector<std::shared_ptr<Triangle>> &polygons,
-	BVH_node *nodes, int used_node_count) {
+	BVH_node *nodes, int &used_node_count) {
 
 	//ポリゴン数が最大で2^()
 	used_node_count = 0;
-	constructBVH_internal(polygons, nodes, used_node_count, 0);  // nodes[0] をルートノードとみなす
+	const int init = 0;
+	constructBVH_internal(polygons, nodes, used_node_count, init);  // nodes[0] をルートノードとみなす
 }

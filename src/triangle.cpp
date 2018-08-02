@@ -9,14 +9,14 @@ TriangleMesh::TriangleMesh(const std::vector<Vec> &ps, const std::vector<Vec> &n
 	}
 }
 
-Triangle::Triangle(const std::vector<Vec> &p, const std::vector<Vec> &n)
-	: mesh(p, n)
+Triangle::Triangle(const std::vector<Vec> &ps, const std::vector<Vec> &ns)
+	: mesh(ps, ns)
 {
-	normal = Normalize(Cross((p[1] - p[0]), (p[2] - p[0])));
-	bbox[0][0] = std::min(std::min(p[0].x, p[1].x), p[2].x);
-	bbox[0][1] = std::min(std::min(p[0].y, p[1].y), p[2].y);
-	bbox[0][2] = std::min(std::min(p[0].z, p[1].z), p[2].z);
-	bbox[1][0] = std::max(std::min(p[0].x, p[1].x), p[2].x);
-	bbox[1][1] = std::max(std::min(p[0].y, p[1].y), p[2].y);
-	bbox[1][2] = std::max(std::min(p[0].z, p[1].z), p[2].z);
+	normal = Normalize(Cross((ps[1] - ps[0]), (ps[2] - ps[0])));
+	bbox[0][0] = std::min(std::min(ps[0].x, ps[1].x), ps[2].x);
+	bbox[0][1] = std::min(std::min(ps[0].y, ps[1].y), ps[2].y);
+	bbox[0][2] = std::min(std::min(ps[0].z, ps[1].z), ps[2].z);
+	bbox[1][0] = std::max(std::max(ps[0].x, ps[1].x), ps[2].x);
+	bbox[1][1] = std::max(std::max(ps[0].y, ps[1].y), ps[2].y);
+	bbox[1][2] = std::max(std::max(ps[0].z, ps[1].z), ps[2].z);
 };

@@ -82,7 +82,6 @@ std::shared_ptr<Triangle> intersect(BVH_node *nodes, int index, const Ray &ray, 
 	// AABB とレイの交差判定
 	if (IntersectAABB(nodes[index].bbox, ray)) {
 		// 交差している
-
 		// 中間ノードか？
 		if (nodes[index].children[0] != -1) {
 			// 中間ノード
@@ -105,7 +104,7 @@ std::shared_ptr<Triangle> intersect(BVH_node *nodes, int index, const Ray &ray, 
 				Hitpoint hitopoint;
 				if (intersect(ray, tri, &hitopoint)) {
 					// 既に交差したと判定された他のポリゴンより、レイの始点に近いかどうか
-					if (hitopoint.distance<intersection->hitpoint.distance) {
+					if (hitopoint.distance < intersection->hitpoint.distance) {
 						result = tri;
 						intersection->hitpoint = hitopoint;
 						//intersect->Mat = tri->mat;

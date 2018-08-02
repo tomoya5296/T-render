@@ -29,8 +29,8 @@ void makeLeaf(std::vector<std::shared_ptr <Triangle>> &polygons, BVH_node *node)
 // 与えられたポリゴンリストについて、SAH に基づいて領域分割
 // nodeIndex は対象ノードのインデックス
 void constructBVH_internal(std::vector<std::shared_ptr<Triangle>> &polygons,
-	BVH_node *nodes, int used_node_count, int nodeIndex);
+	BVH_node *nodes, int &used_node_count, const int nodeIndex);
 
 // フロントエンド関数．これを呼べば nodes[0] をルートとした BVH が構築される
 void constructBVH(std::vector<std::shared_ptr<Triangle>> &polygons,
-	BVH_node *nodes, int used_node_count);
+	BVH_node *nodes, int &used_node_count);
