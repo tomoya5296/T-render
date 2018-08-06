@@ -49,15 +49,7 @@ void main(int argc, char **argv) {
 	//objList.push_back(Object(std::string(SCENE_DIRECTORY) + "right_wall.obj",
 	//	Color(0.0), Color(1.0, 0.0, 0.0), DIFFUSE));
 
-	//load meshes
-	std::vector<std::shared_ptr<Triangle>> tris;
-	tris.reserve(10000);
-	objectload(&tris, objList);
-
-	//bvh datas
-	BVH_node nodes[10000];  // ノードリスト．本当は適切なノード数を確保すべき
-	int used_node_count = 0;  // 現在使用されているノードの数
-	constructBVH(tris, nodes, used_node_count);
+	Scene scene(objList);
 
 	parallel_for(0, width * height, [&](int i) {
 		// 乱数
@@ -74,15 +66,9 @@ void main(int argc, char **argv) {
 			// 放射輝度の計算
 			const Vec dir = film.cx * px + film.cy * py + film.camera.dir;
 			Ray ray(film.camera.pos + dir * 13.0, Normalize(dir));
-			const Color L = radiance(nodes, ray, rng, maxdepth);
+			const Color L = radiance(&scene.nodes[0], ray, rng, maxdepth);
 			Assertion(L.isValid(), "Radiance is invalid: (%f, %f %f)", L.x, L.y, L.z);
 			film.pixels[i] = film.pixels[i] + L;
-			/*std::shared_ptr<Triangle> hittri = nullptr;
-			Intersection tempintersect;
-			hittri = intersect(nodes, 0, ray, &tempintersect);
-			if (hittri == nullptr) {
-				film.pixels[i] = Vec(1.0 , 0.0, 0.0);
-			}*/
 		}
 		film.pixels[i] = film.pixels[i] / (float)spp;
 		/*if(i % width == 0)

@@ -22,7 +22,7 @@ public:
 		type = DIFFUSE;
 	}
 
-	bool isLight() const {
+	inline bool isLight() const {
 		return !Le.isZero();
 	}
 
