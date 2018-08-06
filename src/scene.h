@@ -72,6 +72,7 @@ void objectload(std::vector<std::shared_ptr<Triangle>> *tris,
 				shapes[s].mesh.material_ids[f];
 			}
 		}
+	std::cout << objList[i].filename << "‚ª“Ç‚Ýž‚Ü‚ê‚Ü‚µ‚½\n" << std::endl;
 	});
 }
 

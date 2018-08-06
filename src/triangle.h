@@ -10,6 +10,7 @@
 struct TriangleMesh {
 public:
 	TriangleMesh(const std::vector<Vec> &ps, const std::vector<Vec> &ns);
+	TriangleMesh();
 
 	//TriangleMesh Data
 	//std::vector<int> vertexIndices;
@@ -27,6 +28,7 @@ class Triangle {
 public:
 	Triangle(const std::vector<Vec> &ps, const std::vector<Vec> &ns,
 			 const Material &mat_);
+	Triangle();
 	//Triangle Data
 	TriangleMesh mesh;
 	Vec normal;
