@@ -32,5 +32,6 @@ public:
 	std::vector<std::shared_ptr<Triangle>> tris;
 	std::vector<std::shared_ptr<Triangle>> Ltris;
 	std::vector<BVH_node> nodes;
+	std::vector<BVH_node> Lnodes;
 };
 

@@ -11,6 +11,9 @@ Scene::Scene(const std::vector<Object>& objList)
 	nodes.resize(10000);
 	int used_node_count = 0;
 	constructBVH(tris, &nodes[0], used_node_count);
+	Lnodes.resize(10000);
+	used_node_count = 0;
+	constructBVH(Ltris, &Lnodes[0], used_node_count);
 }
 
 void Scene::objectload(const std::vector<Object> &objList) {

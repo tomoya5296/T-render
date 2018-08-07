@@ -12,7 +12,7 @@
 
 
 void main(int argc, char **argv) {
-	int width = 256, height = 256, spp = 1, maxdepth = 10;
+	int width = 512, height = 512, spp = 100, maxdepth = 10;
 	//for (int i = 1; i < argc; i++) {
 	//	if (strcmp(argv[i], "--width") == 0) {
 	//		width = std::atoi(argv[++i]);
@@ -36,8 +36,8 @@ void main(int argc, char **argv) {
 	//	Color(0.0), Color(1.0), DIFFUSE));
 	objList.push_back(Object(std::string(SCENE_DIRECTORY) + "sphere.obj",
 		Color(10.0), Color(0.0), DIFFUSE));
-	//objList.push_back(Object(std::string(SCENE_DIRECTORY) + "bunny.obj",
-	//	Color(0.0), Color(1.0, 0.0, 0.0), DIFFUSE));
+	objList.push_back(Object(std::string(SCENE_DIRECTORY) + "bunny.obj",
+		Color(0.0), Color(1.0, 0.0, 0.0), DIFFUSE));
 	//objList.push_back(Object(std::string(SCENE_DIRECTORY) + "far_wall.obj",
 	//	Color(0.0), Color(1.0, 1.0, 1.0), DIFFUSE));
 	//objList.push_back(Object(std::string(SCENE_DIRECTORY) + "up_wall.obj",
