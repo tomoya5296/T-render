@@ -12,7 +12,7 @@
 
 
 void main(int argc, char **argv) {
-	int width = 256, height = 256, spp = 100, maxdepth = 10;
+	int width = 256, height = 256, spp = 1, maxdepth = 10;
 	//for (int i = 1; i < argc; i++) {
 	//	if (strcmp(argv[i], "--width") == 0) {
 	//		width = std::atoi(argv[++i]);
@@ -66,7 +66,7 @@ void main(int argc, char **argv) {
 			// •úŽË‹P“x‚ÌŒvŽZ
 			const Vec dir = film.cx * px + film.cy * py + film.camera.dir;
 			Ray ray(film.camera.pos + dir * 13.0, Normalize(dir));
-			const Color L = radiance(&scene.nodes[0], ray, rng, maxdepth);
+			const Color L = radiance(scene, ray, rng, maxdepth);
 			Assertion(L.isValid(), "Radiance is invalid: (%f, %f %f)", L.x, L.y, L.z);
 			film.pixels[i] = film.pixels[i] + L;
 		}

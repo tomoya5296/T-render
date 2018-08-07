@@ -1,20 +1,21 @@
 #include "radiance.h"
 
 // ray方向からの放射輝度を求める
-Color radiance(BVH_node *nodes, Ray &ray, Random &rng, int maxDepth) {
+Color radiance(Scene &scene, Ray &ray, Random &rng, const int maxDepth) {
 
 	int depth = 0;
 	Color L = Color(0.0), beta = Color(1.0);
 	float pdf = 1.0;
 
 	for (depth = 0;; ++depth) {
-		std::shared_ptr<Triangle> HitTri = nullptr;
-		Intersection intersection;
-		HitTri = intersect(nodes, 0, ray, &intersection);
-		/* 最大のbounce数を評価*/
 		if (depth >= maxDepth) {
 			return L = Color(0.0);
 		}
+
+		std::shared_ptr<Triangle> HitTri = nullptr;
+		Intersection intersection;
+		HitTri = intersect(&scene.nodes[0], 0, ray, &intersection);
+		/* 最大のbounce数を評価*/
 
 		if (HitTri == nullptr) {
 			return L = Color(0.0);
@@ -58,11 +59,8 @@ Color radiance(BVH_node *nodes, Ray &ray, Random &rng, int maxDepth) {
 		case DIFFUSE: {
 			// 直接光のサンプリングを行う
 			if (!obj.mat.isLight()) {
-				//				const int shadow_ray = 1;
-				//				Vec direct_light;
-				//				for (int i = 0; i < shadow_ray; i++) {
-				//					direct_light = direct_light + direct_radiance_sample(hitpoint, orienting_normal, &obj, rng.next01(), rng.next01(), rng.next01()) / shadow_ray;
-				//				}
+				Vec direct_light;
+				direct_light = direct_radiance_sample(scene.Ltris, hitpoint, orienting_normal, obj, rng);
 
 				// orienting_normalの方向を基準とした正規直交基底(w, u, v)を作る。この基底に対する半球内で次のレイを飛ばす。
 				Vec w, u, v;
@@ -81,7 +79,8 @@ Color radiance(BVH_node *nodes, Ray &ray, Random &rng, int maxDepth) {
 				ray = Ray(hitpoint, dir);
 				beta = beta * (obj.mat.ref / russian_roulette_probability);
 				Assertion(beta.isValid(), "beta is invalid: (%f, %f %f)", beta.x, beta.y, beta.z);
-				//L += direct_light + (obj.mat.ref * radiance(nodes, Ray(hitpoint, dir), rng, depth + 1, maxDepth)) / russian_roulette_probability;
+				L = obj.mat.ref * direct_light + (obj.mat.ref * radiance(scene, Ray(hitpoint, dir), rng, maxDepth)) / russian_roulette_probability;
+				return L;
 			}
 			else if (depth == 0) {
 				if (Dot(-ray.dir, obj.normal) > 0.0)
@@ -90,10 +89,7 @@ Color radiance(BVH_node *nodes, Ray &ray, Random &rng, int maxDepth) {
 					return L = Color(0.0);
 			}
 			else {
-				if (Dot(-ray.dir, obj.normal) > 0.0)
-					return L = obj.mat.Le * beta;
-				else
-					return L = Color(0.0);
+				return L = Color(0.0);
 			}
 		} break;
 			//case SPECULAR: {
@@ -177,4 +173,28 @@ Color radiance(BVH_node *nodes, Ray &ray, Random &rng, int maxDepth) {
 			//}break;
 		}
 	}
+	return L;
+}
+
+// 光源上の点をサンプリングして直接光を計算する。//DIFFUSE面で用いる
+Color direct_radiance_sample(const std::vector<std::shared_ptr<Triangle>> &Ltris,
+	const Vec &v0, const Vec &normal, const Triangle& objtri, Random &rng) {
+
+	// 光源をサンプリングする
+	const int r1 = Ltris.size() * rng.next01();
+	const auto ltri = Ltris[r1];
+	const TriangleMesh &lmesh = ltri->mesh;
+
+	const double u1 = rng.next01();
+	Vec lpos = lmesh.p[0] + u1 * (lmesh.p[1] - lmesh.p[0]) + (1.0 - u1) * (lmesh.p[2] - lmesh.p[0]);
+	Vec dir = Normalize(lpos - v0);
+	Hitpoint lhitpoint;
+	bool ishit = intersect(Ray(v0, dir), ltri, &lhitpoint);
+
+	if (ishit) {
+		//return direct_radiance(v0, normal, tri, light_pos, lintersect);
+		return ltri->mat.Le;
+
+	}
+	return Color(0.0);
 }
