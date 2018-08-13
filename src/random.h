@@ -23,7 +23,7 @@ public:
 	}
 
 	double uniform(double low, double high) {
-		Assertion(low <= high, "Range of unoform random is invalid!!");
+		//Assertion(low <= high, "Range of unoform random is invalid!!");
 		return next01() * (high - low) + low;
 	}
 

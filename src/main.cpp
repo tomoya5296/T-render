@@ -9,10 +9,11 @@
 #include "intersect.h"
 #include "bvh.h"
 #include "radiance.h"
+#include "pm.h"
 
 
 void main(int argc, char **argv) {
-	int width = 512, height = 512, spp = 100, maxdepth = 10;
+	int width = 512, height = 512, spp = 1, maxdepth = 10;
 	//for (int i = 1; i < argc; i++) {
 	//	if (strcmp(argv[i], "--width") == 0) {
 	//		width = std::atoi(argv[++i]);
@@ -50,7 +51,7 @@ void main(int argc, char **argv) {
 	//	Color(0.0), Color(1.0, 0.0, 0.0), DIFFUSE));
 
 	Scene scene(objList);
-
+	
 	parallel_for(0, width * height, [&](int i) {
 		// —”
 		Random rng(i);

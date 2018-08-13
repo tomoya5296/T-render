@@ -204,7 +204,6 @@ Color direct_radiance(const Vec &v0, const Vec &normal, const std::shared_ptr<Tr
 			Vec edge2 = (ltri->mesh.p[2] - ltri->mesh.p[0]);
 			double S = Cross(edge1, edge2).Length() / 2.0;//light‚ÌƒƒbƒVƒ…ˆê‚Â‚Ì•\–ÊÏ
 			return ltri->mat.Le * G * S;
-			//return Multiply(tri->mat.ref, intersect.hitpoint.tri->mat.Le) * (1.0 / PI) * G / (1.0 / (triangles[LightID].size()*S));
 		}
 	}
 	return Color(0.0);
