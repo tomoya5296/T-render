@@ -11,6 +11,8 @@ public:
 	Film(const int width_, const int height_,
 		 const std::string outputfilename_);
 	void save_ppm_file();
+	int get_width() const ;
+	int get_height() const ;
 
 private:
 	inline double clamp(const double x);

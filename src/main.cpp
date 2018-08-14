@@ -1,5 +1,6 @@
 #include <fstream>
 #include <memory>
+#include <chrono>
 #include "vec.h"
 #include "ray.h"
 #include "film.h"
@@ -10,9 +11,12 @@
 #include "bvh.h"
 #include "radiance.h"
 #include "pm.h"
+#include "ppm.h"
 
 
 void main(int argc, char **argv) {
+	auto start = std::chrono::system_clock::now();
+
 	int width = 512, height = 512, spp = 1, maxdepth = 10;
 	//for (int i = 1; i < argc; i++) {
 	//	if (strcmp(argv[i], "--width") == 0) {
@@ -33,25 +37,27 @@ void main(int argc, char **argv) {
 	Film film(width, height, "../output/image.ppm");
 
 	std::vector<Object> objList;
-	//objList.push_back(Object(std::string(SCENE_DIRECTORY) + "bunny.obj",
-	//	Color(0.0), Color(1.0), DIFFUSE));
 	objList.push_back(Object(std::string(SCENE_DIRECTORY) + "sphere.obj",
 		Color(10.0), Color(0.0), DIFFUSE));
 	objList.push_back(Object(std::string(SCENE_DIRECTORY) + "bunny.obj",
 		Color(0.0), Color(1.0, 0.0, 0.0), DIFFUSE));
-	//objList.push_back(Object(std::string(SCENE_DIRECTORY) + "far_wall.obj",
-	//	Color(0.0), Color(1.0, 1.0, 1.0), DIFFUSE));
-	//objList.push_back(Object(std::string(SCENE_DIRECTORY) + "up_wall.obj",
-	//	Color(0.0), Color(1.0, 1.0, 1.0), DIFFUSE));
+	objList.push_back(Object(std::string(SCENE_DIRECTORY) + "far_wall.obj",
+		Color(0.0), Color(1.0, 1.0, 1.0), DIFFUSE));
+	objList.push_back(Object(std::string(SCENE_DIRECTORY) + "up_wall.obj",
+		Color(0.0), Color(1.0, 1.0, 1.0), DIFFUSE));
 	objList.push_back(Object(std::string(SCENE_DIRECTORY) + "bottom_wall.obj",
 		Color(0.0), Color(1.0, 1.0, 1.0), DIFFUSE));
-	//objList.push_back(Object(std::string(SCENE_DIRECTORY) + "left_wall.obj",
-	//	Color(0.0), Color(0.0, 0.0, 1.0), DIFFUSE));
-	//objList.push_back(Object(std::string(SCENE_DIRECTORY) + "right_wall.obj",
-	//	Color(0.0), Color(1.0, 0.0, 0.0), DIFFUSE));
+	objList.push_back(Object(std::string(SCENE_DIRECTORY) + "left_wall.obj",
+		Color(0.0), Color(0.0, 0.0, 1.0), DIFFUSE));
+	objList.push_back(Object(std::string(SCENE_DIRECTORY) + "right_wall.obj",
+		Color(0.0), Color(1.0, 0.0, 0.0), DIFFUSE));
 
 	Scene scene(objList);
-	
+	//P_Photon_map ppm;
+	//ppm.trace_ray(scene, film);
+	//ppm.photon_trace(scene, film);
+	//ppm.density_estimation(&film);
+
 	parallel_for(0, width * height, [&](int i) {
 		// óêêî
 		Random rng(i);
@@ -63,7 +69,6 @@ void main(int argc, char **argv) {
 			const double dy = r2 < 1.0 ? sqrt(r2) - 1.0 : 1.0 - sqrt(2.0 - r2);
 			const double px = ((i % width) + dx + 0.5) / width - 0.5;
 			const double py = ((height - (i / width) - 1) + dy + 0.5) / height - 0.5;
-
 			// ï˙éÀãPìxÇÃåvéZ
 			const Vec dir = film.cx * px + film.cy * py + film.camera.dir;
 			Ray ray(film.camera.pos + dir * 13.0, Normalize(dir));
@@ -75,5 +80,9 @@ void main(int argc, char **argv) {
 		/*if(i % width == 0)
 			printf(" %f finsed\n", ((float)i / ((float)width * (float)height)) * 100.0);*/
 	});
+
 	film.save_ppm_file();
+	auto end = std::chrono::system_clock::now();
+	auto dif = end - start;
+	fprintf(stdout, "Ray Tracing : %lld(msec)\n", std::chrono::duration_cast<std::chrono::milliseconds>(dif).count());
 }

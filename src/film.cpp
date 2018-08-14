@@ -33,3 +33,6 @@ void Film::save_ppm_file() {
 	}
 	writer.close();
 }
+
+int Film::get_height() const { return height; }
+int Film::get_width() const { return width; }

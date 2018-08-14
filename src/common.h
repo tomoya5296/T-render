@@ -8,6 +8,7 @@
 static const double PI = 4.0 * std::atan(1.0);
 static const double INF = 1.0e20;
 static const double EPS = 1.0e-8;
+static const double ALPHA = 0.7; // the alpha parameter of PPM
 
 // -----------------------------------------------------------------------------
 // Assertion with message

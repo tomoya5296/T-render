@@ -122,6 +122,7 @@
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\parallel.cpp" />
     <ClCompile Include="..\src\pm.cpp" />
+    <ClCompile Include="..\src\ppm.cpp" />
     <ClCompile Include="..\src\radiance.cpp" />
     <ClCompile Include="..\src\scene.cpp" />
     <ClCompile Include="..\src\triangle.cpp" />
@@ -137,6 +138,7 @@
     <ClInclude Include="..\src\material.h" />
     <ClInclude Include="..\src\parallel.h" />
     <ClInclude Include="..\src\pm.h" />
+    <ClInclude Include="..\src\ppm.h" />
     <ClInclude Include="..\src\primitive.h" />
     <ClInclude Include="..\src\radiance.h" />
     <ClInclude Include="..\src\random.h" />
