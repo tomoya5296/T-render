@@ -5,6 +5,7 @@
 #include "intersect.h"
 #include "parallel.h"
 #include "random.h"
+#include "vec.h"
 #include "film.h"
 #include "scene.h"
 

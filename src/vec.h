@@ -97,6 +97,15 @@ struct Vec {
 
 inline Vec operator*(double f, const Vec &v) { return v * f; }
 inline Vec Normalize(const Vec &v) { return v / (v.Length()); }
+inline Vec reflect(const Vec &dir, const Vec &normal) {
+	double dot = dir.x * normal.x
+		+ dir.y * normal.y
+		+ dir.z * normal.z;
+
+	return Vec(dir.x - 2.0 * dot * normal.x,
+		dir.y - 2.0 * dot * normal.y,
+		dir.z - 2.0 * dot * normal.z);
+}
 inline std::ostream & operator<<(std::ostream &os, const Vec &v) {
 	os << v.toString();
 	return os;

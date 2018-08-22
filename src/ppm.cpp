@@ -3,7 +3,7 @@
 P_Photon_map::P_Photon_map()
 {
 	hash_s = 0.0;
-	maxphotn_num = 100000;
+	maxphotn_num = 10000000;
 }
 
 P_Photon_map::~P_Photon_map()
@@ -78,7 +78,7 @@ void P_Photon_map::trace_ray(Scene &scene, const Film &film) {
 
 		const Vec dir = film.cx * px + film.cy * py + film.camera.dir;
 		Ray ray(film.camera.pos + dir * 13.0, Normalize(dir));
-		trace(scene, ray, 0, true, Vec(0.0), Vec(1.0), i, 10, film);
+		trace(scene, ray, 0, true, Vec(0.0), Vec(1.0), i, 2, film);
 		//});
 	}
 	build_hash_grid(width, height);
@@ -152,13 +152,62 @@ void P_Photon_map::trace(Scene &scene, const Ray &ray, int depth, const bool isE
 			}
 		}
 	}
+	else if (obj.mat.type == SPECULAR) {
+		trace(scene, Ray(hitpos, reflect(ray.dir, normal)), depth,
+			isEye, f * fl, f * adj, i, maxdepth, film);
+	}
+	else if (obj.mat.type == REFRACTION) {
+		Ray lr(hitpos - ray.dir * EPS, reflect(ray.dir, normal));
+		const bool into = Dot(normal, orienting_normal) > 0.0;
+		const float nc = 1.0;
+		const float nt = 1.5;
+		const float nnt = (into) ? nc / nt : nt / nc;
+		const float ddn = Dot(ray.dir, orienting_normal);
+		const float cos2t = 1.0 - nnt * nnt * (1.0 - ddn * ddn);
+
+		// total internal reflection
+		if (cos2t < 0) {
+			return trace(scene, lr, depth, isEye, f * fl, f * adj,
+				i, maxdepth, film);
+		}
+
+		const Vec td = Normalize(ray.dir * nnt - normal * ((into ? 1 : -1) * (ddn * nnt + sqrt(cos2t))));
+		const float a = nt - nc;
+		const float b = nt + nc;
+		const float R0 = a * a / (b * b);
+		const float c = 1.0 - (into ? -ddn : Dot(td, -1.0 * orienting_normal));
+		const float Re = R0 + (1 - R0) * c * c * c * c * c;
+		const float P = Re * 0.5 + 0.25;
+		//const float nnt2 = pow(into ? nc / nt : nt / nc, 2.0);
+		//const float Tr = (1.0 - Re) * nnt2;
+		const Ray  rr(hitpos + ray.dir * EPS, td);
+		const Vec fa = f * adj;
+		const Vec ffl = f * fl;
+		if (isEye)
+		{
+			// eye ray (trace both rays)
+			trace(scene, lr, depth, isEye, ffl, fa * Re, i, maxdepth, film);
+			trace(scene, rr, depth, isEye, ffl, fa * (1.0 - Re), i, maxdepth, film);
+		}
+		else
+		{
+			Random rng(i);
+			// photon ray (pick one via Russian roulette)
+			if (rng.next01() < P) {
+				//trace(scene, lr, depth, isEye, ffl, fa * Re, i, maxdepth, film);
+			}
+			else {
+				//trace(scene, rr, depth, isEye, ffl, fa * (1.0 - Re), i, maxdepth, film);
+			}
+		}
+	}
 }
 
 Ray P_Photon_map :: genp(Vec* f, int i, Random rng)
 {
 	// generate a photon ray from the point light source with QMC
 
-	(*f) = Vec(2500, 2500, 2500) * (PI * 4.0); // flux
+	(*f) = Vec(100500, 100500, 100500) * (PI * 4.0); // flux
 	const double r1 = 2.0 * PI * rng.next01();
 	const double r2 = rng.next01();
 	const double r2s = sqrt(r2);
@@ -166,21 +215,19 @@ Ray P_Photon_map :: genp(Vec* f, int i, Random rng)
 		+ Vec(0.0, 0.0, 1.0) * sin(r1) * r2s
 		+ Vec(0.0, -1.0, 0.0) * sqrt(1.0 - r2)));
 
-	return Ray(Vec(0.0, 10.0, 20.0), dir);
+	return Ray(Vec(0.0, 20.0, 20.0), dir);
 }
 
 void P_Photon_map::photon_trace(Scene &scene, const Film &film) {
-	
+
 	Vec vw = Vec(1.0, 1.0, 1.0);
-	
+
 	parallel_for(0, maxphotn_num, [&](int i) {
 		Random rng(i);
 		int m = 1000 * i;
 		Vec f(0.0);
-		for (int j = 0; j < 1000; j++) {
-			Ray ray = genp(&f, m + j, rng);
-			trace(scene, ray, 0, false, f, vw, i, 10, film);
-		}
+		Ray ray = genp(&f, m, rng);
+		trace(scene, ray, 0, false, f, vw, i, 10, film);
 	});
 }
 
