@@ -17,7 +17,7 @@
 void main(int argc, char **argv) {
 	auto start = std::chrono::system_clock::now();
 
-	int width = 1024, height = 1024, spp = 1, maxdepth = 10;
+	int width = 256, height = 256, spp = 1, maxdepth = 10;
 	//for (int i = 1; i < argc; i++) {
 	//	if (strcmp(argv[i], "--width") == 0) {
 	//		width = std::atoi(argv[++i]);

@@ -3,7 +3,7 @@
 P_Photon_map::P_Photon_map()
 {
 	hash_s = 0.0;
-	maxphotn_num = 10000000;
+	maxphotn_num = 100000000;
 }
 
 P_Photon_map::~P_Photon_map()
@@ -78,7 +78,7 @@ void P_Photon_map::trace_ray(Scene &scene, const Film &film) {
 
 		const Vec dir = film.cx * px + film.cy * py + film.camera.dir;
 		Ray ray(film.camera.pos + dir * 13.0, Normalize(dir));
-		trace(scene, ray, 0, true, Vec(0.0), Vec(1.0), i, 2, film);
+		trace(scene, ray, 0, true, Vec(0.0), Vec(1.0), i, 10, film);
 		//});
 	}
 	build_hash_grid(width, height);
@@ -146,7 +146,7 @@ void P_Photon_map::trace(Scene &scene, const Ray &ray, int depth, const bool isE
 						auto g = (hp->n * ALPHA + ALPHA) / (hp->n * ALPHA + 1.0);
 						hp->r2 = hp->r2 * g;
 						hp->n++;
-						hp->flux = (hp->flux + (f * fl) / PI) * g;
+						hp->flux = (hp->flux + (hp->f * fl) / PI) * g;
 					}
 				}
 			}
@@ -160,7 +160,7 @@ void P_Photon_map::trace(Scene &scene, const Ray &ray, int depth, const bool isE
 		Ray lr(hitpos - ray.dir * EPS, reflect(ray.dir, normal));
 		const bool into = Dot(normal, orienting_normal) > 0.0;
 		const float nc = 1.0;
-		const float nt = 1.5;
+		const float nt = 1.3;
 		const float nnt = (into) ? nc / nt : nt / nc;
 		const float ddn = Dot(ray.dir, orienting_normal);
 		const float cos2t = 1.0 - nnt * nnt * (1.0 - ddn * ddn);
@@ -194,10 +194,10 @@ void P_Photon_map::trace(Scene &scene, const Ray &ray, int depth, const bool isE
 			Random rng(i);
 			// photon ray (pick one via Russian roulette)
 			if (rng.next01() < P) {
-				//trace(scene, lr, depth, isEye, ffl, fa * Re, i, maxdepth, film);
+				trace(scene, lr, depth, isEye, ffl, fa * Re, i, maxdepth, film);
 			}
 			else {
-				//trace(scene, rr, depth, isEye, ffl, fa * (1.0 - Re), i, maxdepth, film);
+				trace(scene, rr, depth, isEye, ffl, fa * (1.0 - Re), i, maxdepth, film);
 			}
 		}
 	}
