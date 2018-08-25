@@ -8,7 +8,7 @@ Scene::Scene(const std::vector<Object>& objList)
 	objectload(objList);
 
 	//make bvh
-	nodes.resize(10000);
+	nodes.resize(100000);
 	int used_node_count = 0;
 	constructBVH(tris, &nodes[0], used_node_count);
 	Lnodes.resize(10000);
@@ -17,7 +17,7 @@ Scene::Scene(const std::vector<Object>& objList)
 }
 
 void Scene::objectload(const std::vector<Object> &objList) {
-	tris.reserve(10000);
+	tris.reserve(100000);
 	Ltris.reserve(10000);
 
 	parallel_for(0, objList.size(), [&](int i) {

@@ -21,7 +21,7 @@ TriangleMesh::TriangleMesh() {
 Triangle::Triangle(const std::vector<Vec> &ps, const std::vector<Vec> &ns,
 				   const Material &mat_) : mesh(ps, ns), mat(mat_)
 {
-	normal = Normalize(Cross((ps[1] - ps[0]), (ps[2] - ps[0])));
+	normal = (ns[0] + ns[1] + ns[2]) / 3.0;
 	bbox[0][0] = std::min(std::min(ps[0].x, ps[1].x), ps[2].x);
 	bbox[0][1] = std::min(std::min(ps[0].y, ps[1].y), ps[2].y);
 	bbox[0][2] = std::min(std::min(ps[0].z, ps[1].z), ps[2].z);
