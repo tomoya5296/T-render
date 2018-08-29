@@ -3,9 +3,9 @@
 Film::Film(const int width_, const int height_, const std::string outputfilename_):
 	width(width_), height(height_), outputfilename(outputfilename_), camera()  {
 	pixels = std::unique_ptr<Color[]>(new Color[width * height]);
-	cx = Vec(width * 1.5135 / height, 0.0, 0.0);
+	cx = Vec(width * 0.2535 / height, 0.0, 0.0);
 
-	cy = Normalize(Vec(Cross(cx, camera.dir))) * 1.5135;
+	cy = Normalize(Vec(Cross(cx, camera.dir))) * 0.2535;
 }
 
 inline double Film::clamp(const double x) {

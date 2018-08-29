@@ -128,6 +128,8 @@
     <ClInclude Include="..\..\src\ray.h" />
     <ClInclude Include="..\..\src\scene.h" />
     <ClInclude Include="..\..\src\sphere.h" />
+    <ClInclude Include="..\..\src\stbi_image.h" />
+    <ClInclude Include="..\..\src\stbi_image_write.h" />
     <ClInclude Include="..\..\src\tiny_obj_loader.h" />
     <ClInclude Include="..\..\src\triangle.h" />
     <ClInclude Include="..\..\src\vec.h" />

@@ -27,9 +27,9 @@ void creatAABBfromTriangles(const std::vector<std::shared_ptr <Triangle>> &trian
 	float bbox[2][3]) {
 	emptyAABB(bbox);
 
-	std::for_each(triangles.begin(), triangles.end(), [&bbox](const std::shared_ptr <Triangle> t) {
+	for (std::shared_ptr <Triangle> t : triangles) {
 		mergeAABB(t->bbox, bbox, bbox);
-	});
+	}
 }
 
 void makeLeaf(std::vector<std::shared_ptr <Triangle>> &polygons, BVH_node *node) {

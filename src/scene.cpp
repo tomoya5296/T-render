@@ -20,7 +20,8 @@ void Scene::objectload(const std::vector<Object> &objList) {
 	tris.reserve(100000);
 	Ltris.reserve(10000);
 
-	parallel_for(0, objList.size(), [&](int i) {
+	//parallel_for(0, objList.size(), [&](int i) {
+	for (int i = 0; i < objList.size(); i++) {
 		std::string inputfile = objList[i].filename;
 		tinyobj::attrib_t attrib;
 		std::vector<tinyobj::shape_t> shapes;
@@ -73,5 +74,6 @@ void Scene::objectload(const std::vector<Object> &objList) {
 			}
 		}
 		std::cout << objList[i].filename << "‚ª“Ç‚Ýž‚Ü‚ê‚Ü‚µ‚½\n" << std::endl;
-	});
+		//});
+	}
 }
