@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include <fstream>
 #include <memory>
 #include <chrono>
@@ -13,9 +12,7 @@
 #include "radiance.h"
 #include "pm.h"
 #include "ppm.h"
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stbi_image_write.h"
-#include "stbi_image.h"
+
 
 
 
@@ -24,7 +21,7 @@ void main(int argc, char **argv) {
 
 	const int constant_num = 4;
 	int width = 1920 / constant_num, height = 1080 / constant_num,
-		spp = 32, maxdepth = 20;
+		spp = 700, maxdepth = 20;
 
 	//for (int i = 1; i < argc; i++) {
 	//	if (strcmp(argv[i], "--width") == 0) {
@@ -42,7 +39,7 @@ void main(int argc, char **argv) {
 	//}
 
 	//out put image
-	Film film(width, height, "../output/image.ppm");
+	Film film(width, height, "../output/image.png");
 
 	std::vector<Object> objList;
 	objList.push_back(Object(std::string(SCENE_DIRECTORY) + "light_plane_up.obj",
@@ -69,9 +66,8 @@ void main(int argc, char **argv) {
 	//ppm.photon_trace(scene, film);
 	//ppm.density_estimation(&film);
 
+	int itere_num = 0;
 	std::cout << "bvh built" << std::endl;
-	//parallel_for(0, width * height, [&](int i) {
-		//for (int s = 0; s < spp; s++) {
 	parallel_for(0, spp, [&](int s) {
 		for (int i = 0; i < width * height; i++) {
 			// —”
@@ -93,9 +89,14 @@ void main(int argc, char **argv) {
 		}
 		/*if(i % width == 0)
 			printf(" %f finsed\n", ((float)i / ((float)width * (float)height)) * 100.0);*/
+		auto end = std::chrono::system_clock::now();
+		auto dif = end - start;
+		if (std::chrono::duration_cast<std::chrono::milliseconds>(dif).count() > 15000.0) {
+			film.save_ppm_file(itere_num);
+			itere_num++;
+			start = end;
+		}
 	});
-	film.save_ppm_file();
-	auto end = std::chrono::system_clock::now();
-	auto dif = end - start;
-	fprintf(stdout, "Ray Tracing : %lld(msec)\n", std::chrono::duration_cast<std::chrono::milliseconds>(dif).count());
+
+	//fprintf(stdout, "Ray Tracing : %lld(msec)\n", std::chrono::duration_cast<std::chrono::milliseconds>(dif).count());
 }

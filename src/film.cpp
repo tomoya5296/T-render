@@ -1,4 +1,8 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "film.h"
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stbi_image_write.h"
+#include "stbi_image.h"
 
 Film::Film(const int width_, const int height_, const std::string outputfilename_):
 	width(width_), height(height_), outputfilename(outputfilename_), camera()  {
@@ -20,18 +24,24 @@ inline int Film::to_int(const double x) {
 	return int(pow(clamp(x), 1 / 2.2) * 255 + 0.5);
 }
 
-void Film::save_ppm_file() {
-	std::ofstream writer(outputfilename, std::ios::out);
-	writer << "P3" << std::endl;
-	writer << width << " " << height << std::endl;
-	writer << 255 << std::endl;
-	for (int i = 0; i < width * height; i++) {
-		const int r = to_int(pixels[i].x);
-		const int g = to_int(pixels[i].y);
-		const int b = to_int(pixels[i].z);
-		writer << r << " " << g << " " << b << " ";
+void Film::save_ppm_file(const int itere_num) {
+	std::vector<unsigned char> image_buffer(width * height * 4);
+	for (int y = 0; y < height; ++y)
+	{
+		for (int x = 0; x < width; ++x)
+		{
+			int pos = (y * width + x) * 4;
+			int pixel_pos = y * width + x;
+			image_buffer[pos + 0] = to_int(pixels[pixel_pos].x);
+			image_buffer[pos + 1] = to_int(pixels[pixel_pos].y);
+			image_buffer[pos + 2] = to_int(pixels[pixel_pos].z);
+			image_buffer[pos + 3] = 0xFF;
+		}
 	}
-	writer.close();
+	std::string file_name = "output" + std::to_string(itere_num) + ".png";
+	
+	stbi_write_png(file_name.c_str(), width, height,
+		STBI_rgb_alpha, &(*image_buffer.begin()), 0);
 }
 
 int Film::get_height() const { return height; }
